@@ -1,0 +1,74 @@
+{
+	"products": [
+		{
+			"id": "0",
+			"name": "Apple iPhone 13",
+			"price": "$700.00"
+		},
+		{
+			"id": "1",
+			"name": "Apple iPhone 7",
+			"price": "$200.00"
+		},
+		{
+			"id": "2",
+			"name": "Apple iPhone 7 Plus",
+			"price": "$200.00"
+		},
+		{
+			"id": "3",
+			"name": "Apple iPhone 8 Plus",
+			"price": "$200.00"
+		},
+		{
+			"id": "4",
+			"name": "Apple iPhone 12",
+			"price": "$200.00"
+		},
+		{
+			"id": "5",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "6",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "7",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "8",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "9",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "10",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "11",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "12",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		},
+		{
+			"id": "13",
+			"name": "Apple iPhone 13 Pro Max",
+			"price": "$200.00"
+		}
+	]
+}

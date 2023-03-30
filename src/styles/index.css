@@ -1,0 +1,253 @@
+:root {
+	--bg: rgb(255, 255, 245);
+	--box-bg: rgb(240, 240, 240);
+	--text: #5a5a5a;
+	--text-sm: 0.85rem;
+	--nav-height: 50px;
+	--box-radius: 8px;
+	--btn-radius: 4px;
+	--btn-bg: rgba(26, 115, 232);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+.loader {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.loader-circle {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 5px solid rgba(0, 0, 0, 0.1);
+	border-top-color: #3498db;
+	animation: spin 1s ease-in-out infinite;
+}
+
+.loader-text {
+	margin-top: 4px;
+	font-size: 1rem;
+	font-weight: bold;
+	text-align: center;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+img {
+	width: 100%;
+}
+html {
+	background-color: var(--bg);
+	color: var(--text);
+}
+button {
+	border-radius: var(--btn-radius);
+	background-color: var(--bg);
+	border: none;
+	padding: 12px 0;
+	color: white;
+	font-weight: 500;
+	background-color: var(--btn-bg);
+	font-size: 0.8rem;
+	cursor: pointer;
+}
+
+nav {
+	width: 100%;
+	background-color: var(--bg);
+	height: var(--nav-height);
+	font-size: var(--text-sm);
+	position: fixed;
+	top: 0;
+	right: 0;
+	border: 1px solid rgb(232, 232, 232);
+	padding: 0 16px;
+	display: flex;
+}
+
+nav ul {
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+nav li {
+	list-style: none;
+	cursor: pointer;
+}
+nav li:hover {
+	text-decoration: underline;
+}
+nav a {
+	text-decoration: none;
+	color: var(--text);
+}
+nav .home {
+	cursor: default;
+}
+nav .home > a {
+	cursor: pointer;
+	text-decoration: none;
+	color: var(--text);
+}
+nav .shopping-cart {
+	display: flex;
+	align-items: center;
+	gap: 1px;
+}
+.shopping-cart b {
+	width: 20px;
+	height: 20px;
+	background-color: red;
+	color: white;
+	border-radius: 50%;
+	display: flex;
+	align-self: center;
+	justify-content: center;
+	font-size: 0.65rem;
+	padding-top: 2px;
+	padding-right: 1px;
+	margin-bottom: 1px;
+}
+nav span {
+	cursor: pointer;
+}
+.aside {
+	background-color: rgba(0, 0, 0, 0.8);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 50%;
+	color: white;
+	padding: 12px;
+	padding-top: 16px;
+}
+.aside ul {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.aside li {
+	list-style-type: none;
+	font-size: 0.9rem;
+}
+.aside button {
+	width: 100%;
+	margin-top: 4px;
+}
+header {
+	margin-top: var(--nav-height);
+	animation: appear 0.3s ease-in-out;
+}
+header figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bg);
+	padding: 16px 0;
+	margin-top: 20px;
+}
+header img {
+	max-width: 300px;
+	right: 0;
+}
+header figcaption {
+	width: 90%;
+	text-align: center;
+	color: black;
+	margin-bottom: 12px;
+	font-size: 0.8rem;
+}
+.list-products {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, auto));
+	gap: 16px;
+	padding: 0 16px;
+}
+.product {
+	background-color: var(--box-bg);
+	border-radius: var(--box-radius);
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border: 1px solid rgb(232, 232, 232);
+	animation: appear 0.3s ease-in-out;
+}
+
+@keyframes appear {
+	0% {
+		transform: translateY(-20px);
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
+.product figcaption {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: center;
+	text-align: center;
+}
+.product button {
+	width: 100%;
+	padding: 12px 0;
+}
+
+.hidden {
+	display: none;
+}
+footer {
+	padding: 32px 0;
+}
+footer small {
+	display: block;
+	text-align: center;
+}
+
+@media screen and (min-width: 600px) {
+	.burger-menu {
+		display: none;
+	}
+	nav .home {
+		flex-grow: 0;
+	}
+	nav ul {
+		width: 50%;
+		max-width: 400px;
+		justify-content: space-around;
+	}
+	nav .hidden {
+		display: block;
+	}
+	header h2 {
+		font-size: 3rem;
+	}
+}
+@media screen and (min-width: 1200px) {
+	header {
+		height: 95vh;
+	}
+	header h2 {
+		font-size: 5rem;
+	}
+}
