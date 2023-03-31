@@ -14,7 +14,6 @@ function payShop({ target }) {
 		setTimeout(() => {
 			target.textContent = 'Pagado con éxito'
 			setTimeout(() => {
-				e - commerce
 				location.pathname = location.host.includes('github')
 					? 'e-commerce/index.html'
 					: 'index.html'
