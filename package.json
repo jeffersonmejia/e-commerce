@@ -2,14 +2,19 @@
 	"name": "e-commerce",
 	"version": "1.0.0",
 	"description": "",
+	"author": "Jefferson Mejia",
 	"main": "index.js",
 	"scripts": {
-		"db": "json-server --watch ./src/assets/db.json"
+		"db": "json-server --watch -p 5000 ./server/public/assets/db.json",
+		"dev": "node ./server/index.js"
 	},
 	"keywords": [],
-	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"json-server": "^0.17.3"
+		"body-parser": "^1.20.2",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"json-server": "^0.17.3",
+		"morgan": "^1.10.0"
 	}
 }

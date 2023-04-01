@@ -1,5 +1,5 @@
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
-	MAIN_API = 'http://localhost:3000',
+	MAIN_API = 'http://localhost:5000',
 	PRODUCTS_API = `${MAIN_API}/products`,
 	DEFAULT_PRODUCTS = {
 		products: [
