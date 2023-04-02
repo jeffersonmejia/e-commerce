@@ -47,11 +47,13 @@ async function getProducts() {
 
 function loadProducts(products) {
 	products.forEach((product) => {
-		const $productName = $productsTemplate.querySelector('.product-name'),
+		const $productId = $productsTemplate.querySelector('button'),
+			$productName = $productsTemplate.querySelector('.product-name'),
 			$productPrice = $productsTemplate.querySelector('.product-price')
 
-		const { product_price, product_name } = product
+		const { product_id, product_price, product_name } = product
 
+		$productId.id = product_id
 		$productName.textContent = product_name
 		$productPrice.textContent = product_price
 
