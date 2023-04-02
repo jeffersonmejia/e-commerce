@@ -67,12 +67,22 @@
 				<div class="loader-text">Cargando...</div>
 			</div>
 		</main>
-		<section class="register-modal">
+		<section class="register-modal hidden">
 			<form>
 				<fieldset>
 					<legend><h4>Primero, regístrate</h4></legend>
-					<input type="text" maxlength="10" placeholder="Ingresa tu cédula" />
-					<input type="text" maxlength="32" placeholder="Ingresa tus nombres" />
+					<input
+						type="text"
+						name="client_dni"
+						maxlength="10"
+						placeholder="Ingresa tu cédula"
+					/>
+					<input
+						type="text"
+						name="client_name"
+						maxlength="32"
+						placeholder="Ingresa tus nombres"
+					/>
 					<button>Registrarme</button>
 					<small>Cancelar</small>
 				</fieldset>

@@ -5,7 +5,7 @@ DROP TRIGGER IF EXISTS update_products_trigger ON products;
 DROP TRIGGER IF EXISTS update_clients_trigger ON client;
 DROP TRIGGER IF EXISTS update_shops_trigger ON shops;
 
-DROP FUNCTION IF EXISTS register_user, 
+drop FUNCTION if exists register_user, 
 getCashFormat(decimal), 
 update_column_date;
 
@@ -50,26 +50,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-create or replace function register_user(p_dni varchar(10), p_name varchar(32))
-  returns varchar(32) as $$
-  declare
-  	v_max_dni integer :=10;
-  	v_max_name integer := 32; 
-  
-  begin 
-    if p_dni is null or length(p_dni) != v_max_dni then
-      return 'Error: La cédula debe tener 10 caracteres';
-	elsif p_name is null then
-	  return 'Error: El nombre no es obligatorio';
-	elsif trim(p_name) = '' or length(trim(p_name)) > v_max_name then
-	  return 'Error: El nombre debe tener entre 1 y 32 caracteres';
-	else
-	  insert into client(client_dni, client_name) 
-	  values(p_dni, p_name);
-	  return 'Registrado con éxito';
-	end if;
-  end;
+CREATE OR REPLACE FUNCTION register_user(p_dni varchar(10), p_name varchar(32))
+RETURNS TABLE (message varchar(56), code integer) AS $$
+DECLARE
+  v_max_dni integer :=10;
+  v_max_name integer := 32;
+BEGIN 
+  IF p_dni IS NULL OR length(p_dni) != v_max_dni THEN
+    RETURN QUERY SELECT 'Error: La cédula debe tener 10 caracteres'::varchar(56), 400;
+  ELSIF p_name IS NULL THEN
+    RETURN QUERY SELECT 'Error: El nombre no es obligatorio'::varchar(56), 400;
+  ELSIF trim(p_name) = '' OR length(trim(p_name)) > v_max_name THEN
+    RETURN QUERY SELECT 'Error: El nombre debe tener entre 1 y 32 caracteres'::varchar(40), 400;
+  ELSE
+    INSERT INTO client(client_dni, client_name) 
+    VALUES(p_dni, p_name);
+    RETURN QUERY SELECT 'Registrado con éxito'::varchar(56), 200;
+  END IF;
+END;
 $$ LANGUAGE plpgsql;
+
 
 create or replace trigger update_products_trigger
 BEFORE UPDATE ON products

@@ -3,4 +3,5 @@ const HOST = 'http://localhost',
 
 export const APIS = {
 	PRODUCTS_API: `${HOST}:${PORT}/productos/listado`,
+	SIGNUP_API: `${HOST}:${PORT}/signup`,
 }
