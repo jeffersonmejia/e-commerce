@@ -51,24 +51,26 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION register_user(p_dni varchar(10), p_name varchar(32))
-RETURNS TABLE (message varchar(56), code integer) AS $$
+RETURNS TABLE (message varchar(56), code integer, id integer) AS $$
 DECLARE
   v_max_dni integer :=10;
   v_max_name integer := 32;
 BEGIN 
   IF p_dni IS NULL OR length(p_dni) != v_max_dni THEN
-    RETURN QUERY SELECT 'Error: La cédula debe tener 10 caracteres'::varchar(56), 400;
+    RETURN QUERY SELECT 'Error: La cédula debe tener 10 caracteres'::varchar(56), 400, NULL;
   ELSIF p_name IS NULL THEN
-    RETURN QUERY SELECT 'Error: El nombre no es obligatorio'::varchar(56), 400;
+    RETURN QUERY SELECT 'Error: El nombre no es obligatorio'::varchar(56), 400, NULL;
   ELSIF trim(p_name) = '' OR length(trim(p_name)) > v_max_name THEN
-    RETURN QUERY SELECT 'Error: El nombre debe tener entre 1 y 32 caracteres'::varchar(40), 400;
+    RETURN QUERY SELECT 'Error: El nombre debe tener entre 1 y 32 caracteres'::varchar(40), 400, NULL;
   ELSE
     INSERT INTO client(client_dni, client_name) 
     VALUES(p_dni, p_name);
-    RETURN QUERY SELECT 'Registrado con éxito'::varchar(56), 200;
+    SELECT client_id INTO id FROM client WHERE client_dni = p_dni;
+    RETURN QUERY SELECT 'Registrado con éxito'::varchar(56), 200, id;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 create or replace trigger update_products_trigger
@@ -122,7 +124,6 @@ select  product_id, product_name, getCashFormat(product_price)
 as product_price from  products;
 
 select * from products_view;
-select * from register_user('1234567899', 'Jefferson mejia');
-select * from client;
+select * from register_user('1234567229', 'Jefferon mejia');
 
 

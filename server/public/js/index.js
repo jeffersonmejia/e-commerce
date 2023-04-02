@@ -101,10 +101,18 @@ function getFetchOptions(data) {
 	return OPTIONS
 }
 
-async function signupUser(message, data) {
-	message = 'aaa'
+function resetSignupInputs() {
+	const inputs = $registerModal.querySelectorAll('input')
+	inputs.forEach((input) => (input.value = ''))
+}
+
+function disableSignupInputs(flag) {
+	const inputs = $registerModal.querySelectorAll('input')
+	inputs.forEach((input) => (input.disabled = flag))
+}
+
+async function signupUser(target, data) {
 	try {
-		console.log(message)
 		const res = await fetch(SIGNUP_API, getFetchOptions(data))
 		const json = await res.json()
 		const DEFAULT_RESPONSE = {
@@ -120,13 +128,15 @@ async function signupUser(message, data) {
 			DEFAULT_RESPONSE.statusText = json.message
 			throw DEFAULT_RESPONSE
 		}
-		message = json.message
+		target.textContent = json.message
 		setTimeout(() => $registerModal.classList.add('hidden'), 300)
 	} catch (error) {
-		console.log(error)
-		message = error.message
-	} finally {
-		message = 'Redirigiendo...'
+		target.textContent = error.statusText
+		setTimeout(() => {
+			resetSignupInputs()
+			target.textContent = 'Registrarme'
+			disableSignupInputs(false)
+		}, 3000)
 	}
 }
 
@@ -134,11 +144,13 @@ function signup(e) {
 	const { target } = e
 	if (target.matches('.register-modal button')) {
 		e.preventDefault()
-		target.textContent = '...'
 		const { isValidate, inputs } = validateSignup()
-		const data = getSigninData(inputs)
-		if (isValidate) signupUser(e.target.textContent, data)
-		console.log(e.target.textContent)
+		if (isValidate) {
+			const data = getSigninData(inputs)
+			disableSignupInputs(true)
+			target.textContent = '...'
+			setTimeout(() => signupUser(target, data), 1500)
+		}
 	}
 }
 
