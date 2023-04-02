@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS products, client, shops cascade;
 CREATE TABLE products(
 	product_id serial PRIMARY KEY,
 	product_name varchar(32) not null,
-	product_price integer not null,
+	product_price decimal not null,
 	created_at timestamp default now(),
 	updated_at timestamp default now()
 );
@@ -28,7 +28,7 @@ CREATE TABLE client(
 	client_active boolean default true
 );
 
-CREATE OR REPLACE FUNCTION getCashFormat(v_number integer)
+CREATE OR REPLACE FUNCTION getCashFormat(v_number decimal)
 RETURNS varchar AS $$
 begin
     RETURN concat('$',v_number) ;
@@ -73,20 +73,20 @@ ON DELETE CASCADE;
 
 INSERT INTO products (product_name, product_price)
 VALUES 
-('iPhone 12', 799),
-('iPhone 12 mini', 699),
-('iPhone SE', 399),
-('iPhone 11', 599),
-('iPhone XR', 499),
-('iPhone Xs', 899),
-('iPhone Xs Max', 1099),
-('iPhone 8', 449),
-('iPhone 8 Plus', 549),
-('iPhone 7', 349),
-('iPhone 7 Plus', 449),
-('iPhone 6s', 199),
-('iPhone 6s Plus', 299),
-('iPhone 6', 149);
+('iPhone 12', 799.00),
+('iPhone 12 mini', 699.50),
+('iPhone SE', 399.35),
+('iPhone 11', 599.60),
+('iPhone XR', 499.40),
+('iPhone Xs', 899.20),
+('iPhone Xs Max', 1099.20),
+('iPhone 8', 449.22),
+('iPhone 8 Plus', 549.56),
+('iPhone 7', 349.87),
+('iPhone 7 Plus', 449.24),
+('iPhone 6s', 196.20),
+('iPhone 6s Plus', 299.00),
+('iPhone 6', 149.00);
 
 create or replace view products_view as 
 select  product_id, product_name, getCashFormat(product_price) as product_price 
