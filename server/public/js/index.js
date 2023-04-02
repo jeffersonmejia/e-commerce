@@ -11,8 +11,8 @@ const d = document,
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
 	{ PRODUCTS_API, SIGNUP_API } = APIS
 
-const shoppingList = [],
-	product = { name: null, price: null }
+const shoppingList = []
+let user_id = -1
 
 function toggleAside({ target }) {
 	if (target.matches('.burger-menu') || target.matches('.aside-back')) {
@@ -22,12 +22,15 @@ function toggleAside({ target }) {
 
 function addShoppingCart({ target }) {
 	if (target.matches('.product button')) {
-		$registerModal.classList.remove('hidden')
-		/*target.textContent = '...'
-		setTimeout(() => {
-			target.textContent = SHOPPING_BTN_CONTENT
-			addShop()
-		}, 300)*/
+		if (user_id === -1) {
+			$registerModal.classList.remove('hidden')
+		} else {
+			target.textContent = '...'
+			setTimeout(() => {
+				target.textContent = SHOPPING_BTN_CONTENT
+				addShop()
+			}, 300)
+		}
 	}
 }
 
@@ -129,7 +132,10 @@ async function signupUser(target, data) {
 			throw DEFAULT_RESPONSE
 		}
 		target.textContent = json.message
-		setTimeout(() => $registerModal.classList.add('hidden'), 300)
+		setTimeout(() => {
+			$registerModal.classList.add('hidden')
+			user_id = json.id
+		}, 300)
 	} catch (error) {
 		target.textContent = error.statusText
 		setTimeout(() => {
