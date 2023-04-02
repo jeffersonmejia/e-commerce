@@ -1,80 +1,4 @@
-const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
-	MAIN_API = 'http://localhost:5000',
-	PRODUCTS_API = `${MAIN_API}/products`,
-	DEFAULT_PRODUCTS = {
-		products: [
-			{
-				id: '0',
-				name: 'Apple iPhone 13',
-				price: '$700.00',
-			},
-			{
-				id: '1',
-				name: 'Apple iPhone 7',
-				price: '$200.00',
-			},
-			{
-				id: '2',
-				name: 'Apple iPhone 7 Plus',
-				price: '$200.00',
-			},
-			{
-				id: '3',
-				name: 'Apple iPhone 8 Plus',
-				price: '$200.00',
-			},
-			{
-				id: '4',
-				name: 'Apple iPhone 12',
-				price: '$200.00',
-			},
-			{
-				id: '5',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '6',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '7',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '8',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '9',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '10',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '11',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '12',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-			{
-				id: '13',
-				name: 'Apple iPhone 13 Pro Max',
-				price: '$200.00',
-			},
-		],
-	}
+import { APIS } from './modules/index.js'
 
 const d = document,
 	$aside = d.querySelector('.aside'),
@@ -82,6 +6,9 @@ const d = document,
 	$productsTemplate = d.querySelector('#product-template').content,
 	$listProducts = d.querySelector('.list-products'),
 	$loader = d.querySelector('.loader')
+
+const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
+	{ PRODUCTS_API } = APIS
 
 const shoppingList = [],
 	product = { name: null, price: null }
@@ -123,8 +50,10 @@ function loadProducts(products) {
 		const $productName = $productsTemplate.querySelector('.product-name'),
 			$productPrice = $productsTemplate.querySelector('.product-price')
 
-		$productName.textContent = product.name
-		$productPrice.textContent = product.price
+		const { product_price, product_name } = product
+
+		$productName.textContent = product_name
+		$productPrice.textContent = product_price
 
 		let $clone = $productsTemplate.cloneNode(true)
 		$listProducts.appendChild($clone)
@@ -141,11 +70,5 @@ d.addEventListener('click', (e) => {
 
 d.addEventListener('DOMContentLoaded', (e) => {
 	$shoppingNumber.textContent = shoppingList.length
-	setTimeout(() => {
-		if (!location.hostname.includes('github')) {
-			getProducts()
-		} else {
-			getDefaultProducts()
-		}
-	}, 2000)
+	getProducts()
 })

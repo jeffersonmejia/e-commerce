@@ -1,6 +1,7 @@
 /*-------------------------------------- E-COMMERCE DATABASE DEVELOPED WITH POSGRESQL -------------------------------------------*/
 /*DDL*/
-DROP TABLE IF EXISTS products, shops, client;
+DROP TABLE IF EXISTS products, client, shops cascade;
+
 CREATE TABLE products(
 	product_id serial PRIMARY KEY,
 	product_name varchar(32) not null,
@@ -26,6 +27,13 @@ CREATE TABLE client(
 	updated_at timestamp default now(),
 	client_active boolean default true
 );
+
+CREATE OR REPLACE FUNCTION getCashFormat(v_number integer)
+RETURNS varchar AS $$
+begin
+    RETURN concat('$',v_number) ;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_column_date()
 RETURNS TRIGGER AS $$
@@ -80,4 +88,8 @@ VALUES
 ('iPhone 6s Plus', 299),
 ('iPhone 6', 149);
 
-select  * from  products ;
+create or replace view products_view as 
+select  product_id, product_name, getCashFormat(product_price) as product_price 
+from  products;
+
+select * from products_view;
