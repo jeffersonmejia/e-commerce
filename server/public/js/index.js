@@ -5,7 +5,8 @@ const d = document,
 	$shoppingNumber = d.querySelector('.shopping-cart b'),
 	$productsTemplate = d.querySelector('#product-template').content,
 	$listProducts = d.querySelector('.list-products'),
-	$loader = d.querySelector('.loader')
+	$loader = d.querySelector('.loader'),
+	$registerModal = d.querySelector('.register-modal')
 
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
 	{ PRODUCTS_API } = APIS
@@ -62,12 +63,42 @@ function loadProducts(products) {
 	})
 	$loader.classList.add('hidden')
 }
-function getDefaultProducts() {
-	loadProducts(DEFAULT_PRODUCTS.products)
+
+function validateInputs(inputs) {
+	let isEmpty = true
+	inputs.forEach((input) => {
+		isEmpty = input.value === ''
+		if (isEmpty) {
+			input.classList.add('input-fail')
+			setTimeout(() => {
+				input.classList.remove('input-fail')
+			}, 1500)
+		}
+	})
+	return isEmpty
+}
+
+function registerUser(e) {
+	const { target } = e,
+		$inputs = $registerModal.querySelectorAll('input')
+
+	if (target.matches('.register-modal button')) {
+		e.preventDefault()
+		if (!validateInputs($inputs)) {
+			target.textContent = '...'
+			setTimeout(() => {
+				target.textContent = 'Registrado con éxito'
+				setTimeout(() => {
+					$registerModal.classList.add('hidden')
+				}, 1000)
+			}, 1000)
+		}
+	}
 }
 d.addEventListener('click', (e) => {
 	toggleAside(e)
 	addShoppingCart(e)
+	registerUser(e)
 })
 
 d.addEventListener('DOMContentLoaded', (e) => {

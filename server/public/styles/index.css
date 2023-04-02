@@ -65,6 +65,17 @@ button {
 	cursor: pointer;
 }
 
+input {
+	padding: 8px;
+	border-radius: var(--btn-radius);
+	border: 1px solid rgb(200, 200, 200);
+	outline: none;
+	cursor: pointer;
+}
+input:hover {
+	background-color: var(--box-bg);
+}
+
 nav {
 	width: 100%;
 	background-color: var(--bg);
@@ -215,6 +226,54 @@ header figcaption {
 .product button {
 	width: 100%;
 	padding: 12px 0;
+}
+.register-modal {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.register-modal form {
+	width: 90%;
+	max-width: 400px;
+	background-color: var(--bg);
+	padding: 24px;
+	border-radius: var(--box-radius);
+}
+.register-modal fieldset {
+	border: none;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.register-modal legend {
+	margin: 8px 0;
+	margin-top: 0;
+}
+.register-modal small {
+	margin: auto;
+	cursor: pointer;
+}
+.input-fail {
+	border: 1px solid red;
+	animation: input_fail 0.3s ease-in-out;
+}
+
+@keyframes input_fail {
+	0% {
+		transform: translateX(-12px);
+	}
+	50% {
+		transform: translateX(12px);
+	}
+	to {
+		transform: translateX(0px);
+	}
 }
 
 .hidden {
