@@ -4,5 +4,6 @@ const HOST = 'http://localhost',
 export const APIS = {
 	PRODUCTS_API: `${HOST}:${PORT}/productos/listado`,
 	ADD_PRODUCTS_API: `${HOST}:${PORT}/agregar-producto`,
+	GET_PRODUCTS_SHOPS: `${HOST}:${PORT}/compras/productos`,
 	SIGNUP_API: `${HOST}:${PORT}/signup`,
 }

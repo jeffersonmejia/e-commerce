@@ -8,7 +8,8 @@ DROP TRIGGER IF EXISTS update_shops_trigger ON shops;
 drop FUNCTION if exists register_user,
 add_shop,
 getCashFormat(decimal), 
-update_column_date;
+update_column_date,
+get_shops;
 
 CREATE TABLE products(
 	product_id serial PRIMARY KEY,
@@ -162,18 +163,28 @@ select * from products_view;
 select * from register_user('1234567238', 'Jefferson mejia');
 
 insert into shops(product_id, client_id) 
-values(1, 2);
+values(3, 1);
 
 select  * from shops;
 select  * from client;
 
-select s.shops_id,c.client_name  
-from shops s
-inner join client c
-on s.shops_id = c.shops_id
-group by s.shops_id, c.client_name;
+/*GET-> /compras/productos*/
+select p.product_name, 
+count(p.product_id) as products_shops, 
+concat('$',p.product_price) as product_unit,
+concat('$', (count(p.product_id) * p.product_price)) as products_total
+FROM shops s
+INNER JOIN client c ON s.client_id = c.client_id
+INNER JOIN products p ON s.product_id = p.product_id
+WHERE c.client_id = 3
+group by p.product_id
+ORDER BY p.product_name;
 
-
-
-
-
+/*GET -> /compras/pago*/
+SELECT concat('$',round(SUM(p.product_price - (p.product_price * 0.12 )), 2)) as payment_subtotal,
+concat('$',round(SUM(p.product_price * 0.12 ), 2)) as payment_iva,
+concat('$',round(SUM(p.product_price), 2)) as payment_total
+FROM shops s
+INNER JOIN client c ON s.client_id = c.client_id
+INNER JOIN products p ON s.product_id = p.product_id
+WHERE c.client_id = 3;

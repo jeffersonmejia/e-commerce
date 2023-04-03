@@ -40,60 +40,21 @@
 		<main>
 			<section class="shops-list">
 				<article>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
-					<figure>
-						<img src="../assets/img/header.png" alt="" />
-						<figcaption>
-							<small>Producto: Apple iPhone 13</small>
-							<small>Valor unitario: $100.00</small>
-							<small>Cantidad: 12</small>
-							<small>Total: $1200.00</small>
-						</figcaption>
-					</figure>
+					<template id="product-template">
+						<figure>
+							<img src="../assets/img/header.png" alt="" />
+							<figcaption>
+								<small class="product-name"></small>
+								<small class="products-shops"> </small>
+								<small class="product-unit-value"> </small>
+								<small class="product-total-value"> </small>
+							</figcaption>
+						</figure>
+					</template>
+					<div class="loader">
+						<div class="loader-circle"></div>
+						<div class="loader-text">Cargando...</div>
+					</div>
 				</article>
 
 				<article class="payment-resumen">
@@ -114,6 +75,6 @@
 				</article>
 			</section>
 		</main>
-		<script src="../js/shop_cart.js"></script>
+		<script src="../js/shop_cart.js" type="module"></script>
 	</body>
 </html>

@@ -6,7 +6,8 @@ const express = require('express'),
 	about = require('../controllers/about.controller'),
 	listado = require('../controllers/listado.controller'),
 	signup = require('../controllers/signup.controller'),
-	addProduct = require('../controllers/add_product.controller')
+	addProduct = require('../controllers/add_product.controller'),
+	shopProducts = require('../controllers/shops_products.controller')
 
 router.get('/', (req, res) => home(req, res))
 router.get('/productos', (req, res) => products(req, res))
@@ -15,5 +16,6 @@ router.get('/compras', (req, res) => shops(req, res))
 router.get('/sobre-mi', (req, res) => about(req, res))
 router.post('/signup', (req, res) => signup(req, res))
 router.post('/agregar-producto', (req, res) => addProduct(req, res))
+router.post('/compras/productos', (req, res) => shopProducts(req, res))
 
 module.exports = router

@@ -8,8 +8,8 @@ const d = document,
 	$loader = d.querySelector('.loader'),
 	$registerModal = d.querySelector('.register-modal')
 
-const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
-	{ PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API } = APIS
+const SHOPPING_BTN_CONTENT = 'Agregar al carrito'
+const { PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API } = APIS
 const DEFAULT_RESPONSE = {
 	status: -1,
 	statusText: 'Servidor no disponible',
@@ -143,6 +143,7 @@ async function signupUser(target, data) {
 		setTimeout(() => {
 			$registerModal.classList.add('hidden')
 			client_id = json.id
+			localStorage.setItem('client_id', client_id)
 		}, 300)
 	} catch (error) {
 		target.textContent = error.statusText
