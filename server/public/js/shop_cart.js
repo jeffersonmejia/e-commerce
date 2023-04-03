@@ -97,7 +97,6 @@ d.addEventListener('click', (e) => {
 })
 
 d.addEventListener('DOMContentLoaded', (e) => {
-	$shoppingNumber.textContent = 0
 	loadCartShops()
 	getProductsShops()
 })
