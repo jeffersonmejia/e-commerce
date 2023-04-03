@@ -9,10 +9,13 @@ const d = document,
 	$registerModal = d.querySelector('.register-modal')
 
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
-	{ PRODUCTS_API, SIGNUP_API } = APIS
-
+	{ PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API } = APIS
+const DEFAULT_RESPONSE = {
+	status: -1,
+	statusText: 'Servidor no disponible',
+}
 const shoppingList = []
-let user_id = -1
+let client_id = -1
 function toggleAside({ target }) {
 	if (target.matches('.burger-menu') || target.matches('.aside-back')) {
 		$aside.classList.toggle('hidden')
@@ -21,21 +24,31 @@ function toggleAside({ target }) {
 
 function addShoppingCart({ target }) {
 	if (target.matches('.product button')) {
-		if (user_id === -1) {
+		if (client_id === -1) {
 			$registerModal.classList.remove('hidden')
 		} else {
 			target.textContent = '...'
 			setTimeout(() => {
 				target.textContent = SHOPPING_BTN_CONTENT
-				addShop()
+				addShop(target.id)
 			}, 300)
 		}
 	}
 }
 
-function addShop() {
-	let shops = parseInt($shoppingNumber.textContent)
-	$shoppingNumber.textContent = shops + 1
+async function addShop(product_id) {
+	try {
+		const res = await fetch(ADD_PRODUCTS_API, getFetchOptions({ product_id, client_id }))
+		if (!res.ok) {
+			DEFAULT_RESPONSE.status = res.status
+			DEFAULT_RESPONSE.statusText = res.statusText
+			throw DEFAULT_RESPONSE
+		}
+		let shops = parseInt($shoppingNumber.textContent)
+		$shoppingNumber.textContent = shops + 1
+	} catch (error) {
+		console.log(error)
+	}
 }
 
 async function getProducts() {
@@ -117,10 +130,6 @@ async function signupUser(target, data) {
 	try {
 		const res = await fetch(SIGNUP_API, getFetchOptions(data))
 		const json = await res.json()
-		const DEFAULT_RESPONSE = {
-			status: -1,
-			statusText: 'Servidor no disponible',
-		}
 		if (!res.ok) {
 			DEFAULT_RESPONSE.status = res.status
 			DEFAULT_RESPONSE.statusText = res.statusText
@@ -133,7 +142,7 @@ async function signupUser(target, data) {
 		target.textContent = json.message
 		setTimeout(() => {
 			$registerModal.classList.add('hidden')
-			user_id = json.id
+			client_id = json.id
 		}, 300)
 	} catch (error) {
 		target.textContent = error.statusText
