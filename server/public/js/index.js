@@ -13,7 +13,6 @@ const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
 
 const shoppingList = []
 let user_id = -1
-
 function toggleAside({ target }) {
 	if (target.matches('.burger-menu') || target.matches('.aside-back')) {
 		$aside.classList.toggle('hidden')

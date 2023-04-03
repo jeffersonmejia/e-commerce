@@ -5,7 +5,8 @@ DROP TRIGGER IF EXISTS update_products_trigger ON products;
 DROP TRIGGER IF EXISTS update_clients_trigger ON client;
 DROP TRIGGER IF EXISTS update_shops_trigger ON shops;
 
-drop FUNCTION if exists register_user, 
+drop FUNCTION if exists register_user,
+add_shop,
 getCashFormat(decimal), 
 update_column_date;
 
@@ -50,6 +51,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
 CREATE OR REPLACE FUNCTION user_exists(p_dni varchar(10)) 
 RETURNS boolean AS $$
 DECLARE
@@ -88,6 +91,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION update_client_shops_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE client SET shops_id = NEW.shops_id WHERE client_id = NEW.client_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_client_shops_id_trigger
+AFTER INSERT OR UPDATE ON shops
+FOR EACH ROW
+EXECUTE FUNCTION update_client_shops_id();
+
+
 create or replace trigger update_products_trigger
 BEFORE UPDATE ON products
 FOR EACH ROW
@@ -107,15 +124,18 @@ EXECUTE FUNCTION update_column_date();
 /*DML*/
 ALTER TABLE shops ADD CONSTRAINT product_id_FK 
 FOREIGN KEY (product_id) REFERENCES products(product_id)
-ON DELETE CASCADE;
+ON DELETE CASCADE
+ON update CASCADE;
 
 ALTER TABLE shops ADD CONSTRAINT client_id_FK 
 FOREIGN KEY (client_id) REFERENCES client(client_id)
-ON DELETE CASCADE;
+ON delete cascade 
+ON update CASCADE;
 
 ALTER TABLE client ADD CONSTRAINT shops_id_FK 
 FOREIGN KEY (shops_id) REFERENCES shops(shops_id)
-ON DELETE CASCADE;
+ON delete cascade 
+ON update CASCADE;
 
 INSERT INTO products (product_name, product_price)
 VALUES 
@@ -139,6 +159,10 @@ select  product_id, product_name, getCashFormat(product_price)
 as product_price from  products;
 
 select * from products_view;
-select * from register_user('1234567228', 'Jefferon mejia');
+select * from register_user('1234567238', 'Jefferson mejia');
 
+insert into shops(product_id, client_id) 
+values(1, 2);
 
+select  * from shops;
+select  * from client;
