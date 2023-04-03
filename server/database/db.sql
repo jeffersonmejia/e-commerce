@@ -166,3 +166,14 @@ values(1, 2);
 
 select  * from shops;
 select  * from client;
+
+select s.shops_id,c.client_name  
+from shops s
+inner join client c
+on s.shops_id = c.shops_id
+group by s.shops_id, c.client_name;
+
+
+
+
+
