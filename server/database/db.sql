@@ -27,7 +27,7 @@ create table shops(
 
 CREATE TABLE client(
 	client_id serial PRIMARY KEY,
-	client_dni varchar(10) not null,
+	client_dni varchar(10) unique not null,
 	client_name varchar(32) not null,
 	shops_id integer,
 	created_at timestamp default now(),
@@ -50,14 +50,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION user_exists(p_dni varchar(10)) 
+RETURNS boolean AS $$
+DECLARE
+  v_exists boolean := false;
+BEGIN
+  SELECT EXISTS(SELECT 1 FROM client WHERE client_dni = p_dni) INTO v_exists;
+  RETURN v_exists;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION register_user(p_dni varchar(10), p_name varchar(32))
-RETURNS TABLE (message varchar(56), code integer, id integer) AS $$
+RETURNS TABLE (message varchar(56), code integer, id text) AS $$
 DECLARE
   v_max_dni integer :=10;
   v_max_name integer := 32;
+  v_user_exists BOOLEAN := false;
 BEGIN 
-  IF p_dni IS NULL OR length(p_dni) != v_max_dni THEN
+  SELECT user_exists(p_dni) INTO v_user_exists;
+	
+  if v_user_exists = true then
+  	RETURN QUERY SELECT 'Error: El usuario ya existe'::varchar(56), 400, NULL;
+  
+  ELSIF p_dni IS NULL OR length(p_dni) != v_max_dni THEN
     RETURN QUERY SELECT 'Error: La cédula debe tener 10 caracteres'::varchar(56), 400, NULL;
+   
   ELSIF p_name IS NULL THEN
     RETURN QUERY SELECT 'Error: El nombre no es obligatorio'::varchar(56), 400, NULL;
   ELSIF trim(p_name) = '' OR length(trim(p_name)) > v_max_name THEN
@@ -70,8 +87,6 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
-
-
 
 create or replace trigger update_products_trigger
 BEFORE UPDATE ON products
@@ -124,6 +139,6 @@ select  product_id, product_name, getCashFormat(product_price)
 as product_price from  products;
 
 select * from products_view;
-select * from register_user('1234567229', 'Jefferon mejia');
+select * from register_user('1234567228', 'Jefferon mejia');
 
 
