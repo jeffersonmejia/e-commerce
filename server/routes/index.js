@@ -7,7 +7,8 @@ const express = require('express'),
 	listado = require('../controllers/listado.controller'),
 	signup = require('../controllers/signup.controller'),
 	addProduct = require('../controllers/add_product.controller'),
-	shopProducts = require('../controllers/shops_products.controller')
+	shopProducts = require('../controllers/shops_products.controller'),
+	shopCart = require('../controllers/shop_cart.controller')
 
 router.get('/', (req, res) => home(req, res))
 router.get('/productos', (req, res) => products(req, res))
@@ -17,5 +18,6 @@ router.get('/sobre-mi', (req, res) => about(req, res))
 router.post('/signup', (req, res) => signup(req, res))
 router.post('/agregar-producto', (req, res) => addProduct(req, res))
 router.post('/compras/productos', (req, res) => shopProducts(req, res))
+router.post('/productos/carrito', (req, res) => shopCart(req, res))
 
 module.exports = router

@@ -6,4 +6,5 @@ export const APIS = {
 	ADD_PRODUCTS_API: `${HOST}:${PORT}/agregar-producto`,
 	GET_PRODUCTS_SHOPS: `${HOST}:${PORT}/compras/productos`,
 	SIGNUP_API: `${HOST}:${PORT}/signup`,
+	SHOPS_CART: `${HOST}:${PORT}/productos/carrito`,
 }

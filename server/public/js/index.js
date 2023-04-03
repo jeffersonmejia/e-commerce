@@ -9,7 +9,7 @@ const d = document,
 	$registerModal = d.querySelector('.register-modal')
 
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito'
-const { PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API } = APIS
+const { PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API, SHOPS_CART } = APIS
 const DEFAULT_RESPONSE = {
 	status: -1,
 	statusText: 'Servidor no disponible',
@@ -181,7 +181,31 @@ d.addEventListener('click', (e) => {
 	cancelSignup(e)
 })
 
+function setClientId() {
+	if (client_id === -1 && localStorage.getItem('client_id')) {
+		client_id = localStorage.getItem('client_id')
+	}
+}
+
+function loadCartShops() {
+	if (client_id !== -1) loadClientCart()
+	else $shoppingNumber.textContent = 0
+}
+
+async function loadClientCart() {
+	try {
+		$shoppingNumber.textContent = '...'
+		const res = await fetch(SHOPS_CART, getFetchOptions({ client_id }))
+		const json = await res.json()
+		const { response } = json
+		$shoppingNumber.textContent = response.client_shops || 0
+	} catch (error) {
+		console.log(error)
+	}
+}
+
 d.addEventListener('DOMContentLoaded', (e) => {
-	$shoppingNumber.textContent = shoppingList.length
+	setClientId()
+	loadCartShops()
 	getProducts()
 })
