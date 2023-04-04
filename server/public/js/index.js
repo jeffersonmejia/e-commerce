@@ -28,16 +28,17 @@ function addShoppingCart({ target }) {
 		if (client_id === -1) {
 			$registerModal.classList.remove('hidden')
 		} else {
+			target.disabled = true
+			target.classList.add('btn-disabled')
 			target.textContent = '...'
 			setTimeout(() => {
-				target.textContent = SHOPPING_BTN_CONTENT
-				addShop(target.id)
+				addShop(target.id, target)
 			}, 300)
 		}
 	}
 }
 
-async function addShop(product_id) {
+async function addShop(product_id, target) {
 	try {
 		const res = await fetch(ADD_PRODUCTS_API, getFetchOptions({ product_id, client_id }))
 		if (!res.ok) {
@@ -47,6 +48,9 @@ async function addShop(product_id) {
 		}
 		let shops = parseInt($shoppingNumber.textContent)
 		$shoppingNumber.textContent = shops + 1
+		target.classList.remove('btn-disabled')
+		target.disabled = false
+		target.textContent = SHOPPING_BTN_CONTENT
 	} catch (error) {
 		console.log(error)
 	}

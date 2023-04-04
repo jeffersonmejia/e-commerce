@@ -109,7 +109,14 @@ returns table (
 	payment_iva text,
 	payment_total text
 ) as $$
+declare
+	var_has_shops text;
 begin
+	select shops_id into var_has_shops from shops where client_id = param_client_id;
+	if var_has_shops is null then
+	return query values('--', '--','--');
+	
+	else
 	return query 
 	SELECT concat('$',round(SUM(p.product_price - (p.product_price * 0.12 )), 2)) as payment_subtotal,
 	concat('$',round(SUM(p.product_price * 0.12 ), 2)) as payment_iva,
@@ -118,6 +125,8 @@ begin
 	INNER JOIN client c ON s.client_id = c.client_id
 	INNER JOIN products p ON s.product_id = p.product_id
 	WHERE c.client_id = param_client_id;
+	
+	end if;
 end;
 $$ LANGUAGE plpgsql;
 
@@ -224,9 +233,13 @@ VALUES
 
 insert into client(client_dni, client_name)  values('9999999999', 'Mathew Scars');
 insert into client(client_dni, client_name)  values('1111111111', 'Mary Jane');
+insert into client(client_dni, client_name)  values('2525252525', 'Jeff Mejia');
 insert into shops(product_id, client_id) values(3, 1);
 insert into shops(product_id, client_id) values(4, 1);
 insert into shops(product_id, client_id) values(5, 1);
 insert into shops(product_id, client_id) values(6, 2);
 insert into shops(product_id, client_id) values(7, 2);
 insert into shops(product_id, client_id) values(8, 2);
+insert into shops(product_id, client_id) values(6, 3);
+insert into shops(product_id, client_id) values(7, 3);
+insert into shops(product_id, client_id) values(8, 3);
