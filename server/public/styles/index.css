@@ -276,6 +276,10 @@ header figcaption {
 	}
 }
 
+.abort-products {
+	text-align: center;
+}
+
 .hidden {
 	display: none;
 }

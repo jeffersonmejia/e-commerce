@@ -10,7 +10,7 @@ const d = document,
 	$paymentIva = d.querySelector('.payment-iva'),
 	$paymentTotal = d.querySelector('.payment-total')
 
-const { GET_PRODUCTS_SHOPS, SHOPS_CART, USER_PAYMENT } = APIS
+const { GET_PRODUCTS_SHOPS, SHOPS_CART, USER_PAYMENT, PAY_SHOPS } = APIS
 let client_id = -1
 
 function toggleAside({ target }) {
@@ -21,16 +21,25 @@ function toggleAside({ target }) {
 
 function payShop({ target }) {
 	if (target.matches('#pay-shop')) {
-		target.textContent = '...'
-		setTimeout(() => {
-			target.textContent = 'Pagado con éxito'
-			setTimeout(() => {
-				location.pathname = '/'
-			}, 500)
-		}, 300)
+		payUserShop(target)
 	}
 }
-
+async function payUserShop(target) {
+	try {
+		target.textContent = '...'
+		const res = await fetch(`${PAY_SHOPS}/${client_id}`, { method: 'delete' }),
+			json = await res.json()
+		if (!res.ok) throw { status: res.status, statusText: res.statusText }
+		setTimeout(() => {
+			target.textContent = json.response
+			//localStorage.removeItem('client_id')
+			setTimeout(() => (location.host = '/'), 1500)
+		}, 300)
+	} catch (error) {
+		target.textContent = error.response
+		setTimeout(() => (location.host = '/'), 1500)
+	}
+}
 function getFetchOptions(data) {
 	const OPTIONS = {
 		method: 'POST',

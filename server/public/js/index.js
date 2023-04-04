@@ -6,7 +6,8 @@ const d = document,
 	$productsTemplate = d.querySelector('#product-template').content,
 	$listProducts = d.querySelector('.list-products'),
 	$loader = d.querySelector('.loader'),
-	$registerModal = d.querySelector('.register-modal')
+	$registerModal = d.querySelector('.register-modal'),
+	$abortProducts = d.querySelector('.abort-products')
 
 const SHOPPING_BTN_CONTENT = 'Agregar al carrito'
 const { PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API, SHOPS_CART } = APIS
@@ -53,7 +54,15 @@ async function addShop(product_id) {
 
 async function getProducts() {
 	try {
-		const res = await fetch(PRODUCTS_API)
+		const controller = new AbortController()
+		const signal = controller.signal
+		setTimeout(() => {
+			controller.abort()
+			$loader.classList.add('hidden')
+			$abortProducts.classList.remove('hidden')
+		}, 3000)
+
+		const res = await fetch(PRODUCTS_API, { signal })
 		if (!res.ok) throw { status: res.status, statusText: res.statusText }
 		const json = await res.json()
 		loadProducts(json)

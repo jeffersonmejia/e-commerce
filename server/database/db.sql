@@ -11,7 +11,8 @@ getCashFormat(decimal),
 update_column_date,
 get_shops,
 get_client_shops,
-get_user_payment;
+get_user_payment,
+pay_products;
 
 CREATE TABLE products(
 	product_id serial PRIMARY KEY,
@@ -102,77 +103,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_client_shops_id_trigger
-AFTER INSERT OR UPDATE ON shops
-FOR EACH ROW
-EXECUTE FUNCTION update_client_shops_id();
-
-
-create or replace trigger update_products_trigger
-BEFORE UPDATE ON products
-FOR EACH ROW
-EXECUTE FUNCTION update_column_date();
-
-CREATE or replace TRIGGER update_shops_trigger
-BEFORE UPDATE ON shops
-FOR EACH ROW
-EXECUTE FUNCTION update_column_date();
-
-create or replace TRIGGER update_client_trigger
-BEFORE UPDATE ON client
-FOR EACH ROW
-EXECUTE FUNCTION update_column_date();
-
-
-/*DML*/
-ALTER TABLE shops ADD CONSTRAINT product_id_FK 
-FOREIGN KEY (product_id) REFERENCES products(product_id)
-ON DELETE CASCADE
-ON update CASCADE;
-
-ALTER TABLE shops ADD CONSTRAINT client_id_FK 
-FOREIGN KEY (client_id) REFERENCES client(client_id)
-ON delete cascade 
-ON update CASCADE;
-
-ALTER TABLE client ADD CONSTRAINT shops_id_FK 
-FOREIGN KEY (shops_id) REFERENCES shops(shops_id)
-ON delete cascade 
-ON update CASCADE;
-
-INSERT INTO products (product_name, product_price)
-VALUES 
-('iPhone 12', 799.00),
-('iPhone 12 mini', 699.50),
-('iPhone SE', 399.35),
-('iPhone 11', 599.60),
-('iPhone XR', 499.40),
-('iPhone Xs', 899.20),
-('iPhone Xs Max', 1099.20),
-('iPhone 8', 449.22),
-('iPhone 8 Plus', 549.56),
-('iPhone 7', 349.87),
-('iPhone 7 Plus', 449.24),
-('iPhone 6s', 196.20),
-('iPhone 6s Plus', 299.00),
-('iPhone 6', 149.00);
-
-create or replace view products_view as 
-select  product_id, product_name, getCashFormat(product_price) 
-as product_price from  products;
-
-select * from products_view;
-select * from register_user('1234567238', 'Jefferson mejia');
-
-insert into shops(product_id, client_id) 
-values(3, 1);
-
-select  * from shops;
-select  * from client;
-
-/*GET -> /compras/pago*/
-
-drop function if exists get_user_payment;
 CREATE OR REPLACE FUNCTION get_user_payment(param_client_id integer)
 returns table (
 	payment_subtotal text,
@@ -191,9 +121,6 @@ begin
 end;
 $$ LANGUAGE plpgsql;
 
-select * from  get_user_payment(3);
-
-drop function if exists get_products_by_client_id;
 CREATE OR REPLACE FUNCTION get_products_by_client_id(param_client_id integer)
 RETURNS TABLE (
     product_name VARCHAR(32),
@@ -229,14 +156,77 @@ BEGIN
 END;
 $$ language plpgsql;
 
+CREATE OR REPLACE FUNCTION pay_products(param_client_id integer) 
+RETURNS void AS $$
+BEGIN 
+	UPDATE client SET shops_id = NULL WHERE client_id = param_client_id;
+	DELETE FROM shops WHERE client_id = param_client_id;
+END;
+$$ LANGUAGE plpgsql;
 
-select * from get_client_shops(3) as "client_shops";
+CREATE TRIGGER update_client_shops_id_trigger
+AFTER INSERT OR UPDATE ON shops
+FOR EACH ROW
+EXECUTE FUNCTION update_client_shops_id();
 
 
+create or replace trigger update_products_trigger
+BEFORE UPDATE ON products
+FOR EACH ROW
+EXECUTE FUNCTION update_column_date();
 
+CREATE or replace TRIGGER update_shops_trigger
+BEFORE UPDATE ON shops
+FOR EACH ROW
+EXECUTE FUNCTION update_column_date();
 
+create or replace TRIGGER update_client_trigger
+BEFORE UPDATE ON client
+FOR EACH ROW
+EXECUTE FUNCTION update_column_date();
 
+create or replace view products_view as 
+select  product_id, product_name, getCashFormat(product_price) 
+as product_price from  products;
 
+/*DML*/
+ALTER TABLE shops ADD CONSTRAINT product_id_FK 
+FOREIGN KEY (product_id) REFERENCES products(product_id)
+ON DELETE CASCADE
+ON update CASCADE;
 
+ALTER TABLE shops ADD CONSTRAINT client_id_FK 
+FOREIGN KEY (client_id) REFERENCES client(client_id)
+ON delete cascade 
+ON update CASCADE;
 
+ALTER TABLE client ADD CONSTRAINT shops_id_FK 
+FOREIGN KEY (shops_id) REFERENCES shops(shops_id)
+ON delete cascade 
+ON update CASCADE;
 
+INSERT INTO products (product_name, product_price)
+VALUES 
+('iPhone 12', 799.00),
+('iPhone 12 mini', 699.50),
+('iPhone SE', 399.35),
+('iPhone 11', 599.60),
+('iPhone XR', 499.40),
+('iPhone Xs', 899.20),
+('iPhone Xs Max', 1099.20),
+('iPhone 8', 449.22),
+('iPhone 8 Plus', 549.56),
+('iPhone 7', 349.87),
+('iPhone 7 Plus', 449.24),
+('iPhone 6s', 196.20),
+('iPhone 6s Plus', 299.00),
+('iPhone 6', 149.00);
+
+insert into client(client_dni, client_name)  values('9999999999', 'Mathew Scars');
+insert into client(client_dni, client_name)  values('1111111111', 'Mary Jane');
+insert into shops(product_id, client_id) values(3, 1);
+insert into shops(product_id, client_id) values(4, 1);
+insert into shops(product_id, client_id) values(5, 1);
+insert into shops(product_id, client_id) values(6, 2);
+insert into shops(product_id, client_id) values(7, 2);
+insert into shops(product_id, client_id) values(8, 2);

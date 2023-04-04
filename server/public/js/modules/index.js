@@ -8,4 +8,5 @@ export const APIS = {
 	SIGNUP_API: `${HOST}:${PORT}/signup`,
 	SHOPS_CART: `${HOST}:${PORT}/productos/carrito`,
 	USER_PAYMENT: `${HOST}:${PORT}/compras/pagar`,
+	PAY_SHOPS: `${HOST}:${PORT}/compras`,
 }
