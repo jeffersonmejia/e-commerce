@@ -7,4 +7,5 @@ export const APIS = {
 	GET_PRODUCTS_SHOPS: `${HOST}:${PORT}/compras/productos`,
 	SIGNUP_API: `${HOST}:${PORT}/signup`,
 	SHOPS_CART: `${HOST}:${PORT}/productos/carrito`,
+	USER_PAYMENT: `${HOST}:${PORT}/compras/pagar`,
 }

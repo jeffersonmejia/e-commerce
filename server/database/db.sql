@@ -9,7 +9,9 @@ drop FUNCTION if exists register_user,
 add_shop,
 getCashFormat(decimal), 
 update_column_date,
-get_shops;
+get_shops,
+get_client_shops,
+get_user_payment;
 
 CREATE TABLE products(
 	product_id serial PRIMARY KEY,
@@ -168,23 +170,73 @@ values(3, 1);
 select  * from shops;
 select  * from client;
 
-/*GET-> /compras/productos*/
-select p.product_name, 
-count(p.product_id) as products_shops, 
-concat('$',p.product_price) as product_unit,
-concat('$', (count(p.product_id) * p.product_price)) as products_total
-FROM shops s
-INNER JOIN client c ON s.client_id = c.client_id
-INNER JOIN products p ON s.product_id = p.product_id
-WHERE c.client_id = 3
-group by p.product_id
-ORDER BY p.product_name;
-
 /*GET -> /compras/pago*/
-SELECT concat('$',round(SUM(p.product_price - (p.product_price * 0.12 )), 2)) as payment_subtotal,
-concat('$',round(SUM(p.product_price * 0.12 ), 2)) as payment_iva,
-concat('$',round(SUM(p.product_price), 2)) as payment_total
-FROM shops s
-INNER JOIN client c ON s.client_id = c.client_id
-INNER JOIN products p ON s.product_id = p.product_id
-WHERE c.client_id = 3;
+
+drop function if exists get_user_payment;
+CREATE OR REPLACE FUNCTION get_user_payment(param_client_id integer)
+returns table (
+	payment_subtotal text,
+	payment_iva text,
+	payment_total text
+) as $$
+begin
+	return query 
+	SELECT concat('$',round(SUM(p.product_price - (p.product_price * 0.12 )), 2)) as payment_subtotal,
+	concat('$',round(SUM(p.product_price * 0.12 ), 2)) as payment_iva,
+	concat('$',round(SUM(p.product_price), 2)) as payment_total
+	FROM shops s
+	INNER JOIN client c ON s.client_id = c.client_id
+	INNER JOIN products p ON s.product_id = p.product_id
+	WHERE c.client_id = param_client_id;
+end;
+$$ LANGUAGE plpgsql;
+
+select * from  get_user_payment(3);
+
+drop function if exists get_products_by_client_id;
+CREATE OR REPLACE FUNCTION get_products_by_client_id(param_client_id integer)
+RETURNS TABLE (
+    product_name VARCHAR(32),
+    products_shops VARCHAR(3),
+    product_unit text,
+    products_total text
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT p.product_name, 
+           CAST(COUNT(p.product_id) AS VARCHAR(3)) AS products_shops, 
+           CONCAT('$', p.product_price) AS product_unit,
+           CONCAT('$', (COUNT(p.product_id) * p.product_price)) AS products_total
+    FROM shops s
+    INNER JOIN client c ON s.client_id = c.client_id
+    INNER JOIN products p ON s.product_id = p.product_id
+    WHERE c.client_id = param_client_id
+    GROUP BY p.product_name, p.product_price
+    ORDER BY p.product_name;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE or replace FUNCTION get_client_shops(p_client_id INTEGER) 
+RETURNS INTEGER as $$
+    DECLARE cart_shops INTEGER;
+BEGIN
+    SELECT COUNT(p.product_id) INTO cart_shops
+    FROM shops s
+    INNER JOIN client c ON s.client_id = c.client_id
+    INNER JOIN products p ON s.product_id = p.product_id
+    WHERE c.client_id = p_client_id;
+    RETURN cart_shops;
+END;
+$$ language plpgsql;
+
+
+select * from get_client_shops(3) as "client_shops";
+
+
+
+
+
+
+
+
+

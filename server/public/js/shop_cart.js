@@ -5,9 +5,12 @@ const d = document,
 	$shoppingNumber = d.querySelector('.shopping-cart b'),
 	$productsTemplate = d.querySelector('#product-template').content,
 	$shopsList = d.querySelector('.shops-list article'),
-	$loader = d.querySelector('.loader')
+	$loader = d.querySelector('.loader'),
+	$paymentSubtotal = d.querySelector('.payment-subtotal'),
+	$paymentIva = d.querySelector('.payment-iva'),
+	$paymentTotal = d.querySelector('.payment-total')
 
-const { GET_PRODUCTS_SHOPS, SHOPS_CART } = APIS
+const { GET_PRODUCTS_SHOPS, SHOPS_CART, USER_PAYMENT } = APIS
 let client_id = -1
 
 function toggleAside({ target }) {
@@ -71,6 +74,40 @@ function loadProducts(products) {
 		$shopsList.appendChild($clone)
 	})
 	$loader.classList.add('hidden')
+	getPayment()
+}
+
+function getPayment() {
+	if (client_id === undefined) {
+		console.log('It does not works!')
+	} else getUserPayment()
+}
+
+function paymentLoader() {
+	$paymentSubtotal.textContent = '...'
+	$paymentIva.textContent = '...'
+	$paymentTotal.textContent = '...'
+}
+
+async function getUserPayment() {
+	try {
+		paymentLoader()
+		const data = { client_id }
+		const options = getFetchOptions(data)
+		const res = await fetch(USER_PAYMENT, options)
+		const json = await res.json()
+		setTimeout(() => {
+			loadUserPayment(json.response)
+		}, 1500)
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+function loadUserPayment({ payment_subtotal, payment_iva, payment_total }) {
+	$paymentSubtotal.textContent = payment_subtotal
+	$paymentIva.textContent = payment_iva
+	$paymentTotal.textContent = payment_total
 }
 
 function loadCartShops() {
