@@ -22,6 +22,10 @@ Comming soon...
 
 ---
 
+<img src="https://i.postimg.cc/9FKDQjv0/main.png" with='150'/>
+<img src="https://i.postimg.cc/cJZ4v1Tx/products.png" with='150'/>
+<img src="https://i.postimg.cc/YSwjQz2w/payment.png" with='150'/>
+
 ### 3. Installation 🚀
 
 - Download [Nodejs 18 or later](https://nodejs.org/en/download)

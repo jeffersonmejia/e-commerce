@@ -11,6 +11,7 @@ getCashFormat(decimal),
 update_column_date,
 get_shops,
 get_client_shops,
+get_products_by_client_id,
 get_user_payment,
 pay_products;
 
@@ -18,6 +19,7 @@ CREATE TABLE products(
 	product_id serial PRIMARY KEY,
 	product_name varchar(32) not null,
 	product_price decimal not null,
+	product_color varchar(24) not null,
 	created_at timestamp default now(),
 	updated_at timestamp default now()
 );
@@ -133,6 +135,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION get_products_by_client_id(param_client_id integer)
 RETURNS TABLE (
     product_name VARCHAR(32),
+    product_color VARCHAR(24),
     products_shops VARCHAR(3),
     product_unit text,
     products_total text
@@ -140,6 +143,7 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT p.product_name, 
+	      p.product_color ,
            CAST(COUNT(p.product_id) AS VARCHAR(3)) AS products_shops, 
            CONCAT('$', p.product_price) AS product_unit,
            CONCAT('$', (COUNT(p.product_id) * p.product_price)) AS products_total
@@ -147,7 +151,7 @@ BEGIN
     INNER JOIN client c ON s.client_id = c.client_id
     INNER JOIN products p ON s.product_id = p.product_id
     WHERE c.client_id = param_client_id
-    GROUP BY p.product_name, p.product_price
+    GROUP BY p.product_name, p.product_price, p.product_color
     ORDER BY p.product_name;
 END;
 $$ LANGUAGE plpgsql;
@@ -195,7 +199,7 @@ FOR EACH ROW
 EXECUTE FUNCTION update_column_date();
 
 create or replace view products_view as 
-select  product_id, product_name, getCashFormat(product_price) 
+select  product_id, product_name, product_color, getCashFormat(product_price) 
 as product_price from  products;
 
 /*DML*/
@@ -214,22 +218,22 @@ FOREIGN KEY (shops_id) REFERENCES shops(shops_id)
 ON delete cascade 
 ON update CASCADE;
 
-INSERT INTO products (product_name, product_price)
+INSERT INTO products (product_name, product_price,product_color)
 VALUES 
-('iPhone 12', 799.00),
-('iPhone 12 mini', 699.50),
-('iPhone SE', 399.35),
-('iPhone 11', 599.60),
-('iPhone XR', 499.40),
-('iPhone Xs', 899.20),
-('iPhone Xs Max', 1099.20),
-('iPhone 8', 449.22),
-('iPhone 8 Plus', 549.56),
-('iPhone 7', 349.87),
-('iPhone 7 Plus', 449.24),
-('iPhone 6s', 196.20),
-('iPhone 6s Plus', 299.00),
-('iPhone 6', 149.00);
+('iPhone 12', 799.00, 'iPhone-black'),
+('iPhone 12 mini', 699.50, 'iPhone-blue'),
+('iPhone SE', 399.35, 'iPhone-green'),
+('iPhone 11', 599.60, 'iPhone-green'),
+('iPhone XR', 499.40, 'iPhone-purple'),
+('iPhone Xs', 899.20, 'iPhone-black'),
+('iPhone Xs Max', 1099.20, 'iPhone-red'),
+('iPhone 8', 449.22, 'iPhone-white'),
+('iPhone 8 Plus', 549.56, 'iPhone-purple'),
+('iPhone 7', 349.87, 'iPhone-black'),
+('iPhone 7 Plus', 449.24, 'iPhone-red'),
+('iPhone 6s', 196.20, 'iPhone-green'),
+('iPhone 6s Plus', 299.00, 'iPhone-black'),
+('iPhone 6', 149.00, 'iPhone-red');
 
 insert into client(client_dni, client_name)  values('9999999999', 'Mathew Scars');
 insert into client(client_dni, client_name)  values('1111111111', 'Mary Jane');
@@ -243,3 +247,6 @@ insert into shops(product_id, client_id) values(8, 2);
 insert into shops(product_id, client_id) values(6, 3);
 insert into shops(product_id, client_id) values(7, 3);
 insert into shops(product_id, client_id) values(8, 3);
+
+select  * from get_products_by_client_id(3);
+
