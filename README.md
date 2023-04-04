@@ -12,7 +12,7 @@
 
 ### 1. Introduction 📖
 
-_ E-commerce is a personal project that allows you to shop online, and your purchases will be saved on a PostgreSQL database using a Node.js server. In these documents, I have provided instructions on how the project works. Good luck!_ 🙂
+_E-commerce is a personal project that allows you to shop online, and your purchases will be saved on a PostgreSQL database using a Node.js server. In these documents, I have provided instructions on how the project works. Good luck!_ 🙂
 
 ---
 
