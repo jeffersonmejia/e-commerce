@@ -18,11 +18,9 @@ _E-commerce is a personal project that allows you to shop online, and your purch
 
 ### 2. Preview 📖
 
-<div>
 <img src="https://i.postimg.cc/vZWMWRS0/main-removebg-preview.png" with='150'/>
-<img src="https://i.postimg.cc/FKNvpPMN/payment-removebg-preview.png" with='150'/>
 <img src="https://i.postimg.cc/VNg8VqwM/products-removebg-preview.png" with='150'/>
-</div>
+<img src="https://i.postimg.cc/FKNvpPMN/payment-removebg-preview.png" with='150'/>
 
 ---
 
