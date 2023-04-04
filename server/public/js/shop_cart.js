@@ -32,12 +32,11 @@ async function payUserShop(target) {
 		if (!res.ok) throw { status: res.status, statusText: res.statusText }
 		setTimeout(() => {
 			target.textContent = json.response
-			//localStorage.removeItem('client_id')
-			setTimeout(() => (location.host = '/'), 1500)
 		}, 300)
+		setTimeout(() => (location.pathname = '/'), 1500)
 	} catch (error) {
 		target.textContent = error.response
-		setTimeout(() => (location.host = '/'), 1500)
+		setTimeout(() => (location.pathname = '/'), 1500)
 	}
 }
 function getFetchOptions(data) {
