@@ -124,9 +124,8 @@ function loadUserPayment({ payment_subtotal, payment_iva, payment_total }) {
 		$shopsUnavailable.classList.remove('hidden')
 	} else {
 		$payBtn.disabled = false
-		$payBtn.classList.remve('btn-disabled')
+		$payBtn.classList.remove('btn-disabled')
 	}
-	//btn-disabled
 }
 
 function loadCartShops() {

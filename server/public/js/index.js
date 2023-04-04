@@ -188,12 +188,6 @@ function cancelSignup({ target }) {
 		$registerModal.classList.add('hidden')
 	}
 }
-d.addEventListener('click', (e) => {
-	toggleAside(e)
-	addShoppingCart(e)
-	signup(e)
-	cancelSignup(e)
-})
 
 function setClientId() {
 	if (client_id === -1 && localStorage.getItem('client_id')) {
@@ -222,4 +216,10 @@ d.addEventListener('DOMContentLoaded', (e) => {
 	setClientId()
 	loadCartShops()
 	getProducts()
+})
+d.addEventListener('click', (e) => {
+	toggleAside(e)
+	addShoppingCart(e)
+	signup(e)
+	cancelSignup(e)
 })
