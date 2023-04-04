@@ -12,7 +12,7 @@
 
 ### 1. Introduction 📖
 
-_E-commerce is a personal project where you can make shops and it will save on a PostgreSQL database throgout a Nodejs server. In this docs I have written all of the instruction to the project it works, good luck!_ 🙂
+_E-commerce is a personal project where you can make shops and it will be saved on a PostgreSQL database throgout a Nodejs server. In this docs I have written all of the instruction to the project it works, good luck!_ 🙂
 
 ---
 
