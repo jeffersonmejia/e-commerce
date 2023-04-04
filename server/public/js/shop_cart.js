@@ -69,13 +69,16 @@ async function getProductsShops() {
 function loadProducts(products) {
 	products.forEach((product) => {
 		const $productName = $productsTemplate.querySelector('.product-name')
+		const $productColor = $productsTemplate.querySelector('.product-color')
 		const $productsShops = $productsTemplate.querySelector('.products-shops')
 		const $productUnitValue = $productsTemplate.querySelector('.product-unit-value')
 		const $productTotalValue = $productsTemplate.querySelector('.product-total-value')
 
-		const { product_name, product_unit, products_shops, products_total } = product
+		const { product_name, product_unit, products_shops, products_total, product_color } =
+			product
 
 		$productName.textContent = `Producto: ${product_name}`
+		$productColor.src = `../assets/img/${product_color}.png` || '../assets/img/header.png'
 		$productsShops.textContent = `Cantidad: ${products_shops}`
 		$productUnitValue.textContent = `Precio unitario: ${product_unit}`
 		$productTotalValue.textContent = `Precio total: ${products_total}`

@@ -4,7 +4,8 @@ const d = document,
 	$aside = d.querySelector('.aside'),
 	$shoppingNumber = d.querySelector('.shopping-cart b'),
 	$productsTemplate = d.querySelector('#product-template').content,
-	$listProducts = d.querySelector('.list-products'),
+	$products = d.querySelector('.list-products'),
+	$productsChild = d.createElement('section'),
 	$loader = d.querySelector('.loader'),
 	$registerModal = d.querySelector('.register-modal'),
 	$abortProducts = d.querySelector('.abort-products')
@@ -79,19 +80,23 @@ async function getProducts() {
 function loadProducts(products) {
 	products.forEach((product) => {
 		const $productId = $productsTemplate.querySelector('button'),
+			$productColor = $productsTemplate.querySelector('.product-color'),
 			$productName = $productsTemplate.querySelector('.product-name'),
 			$productPrice = $productsTemplate.querySelector('.product-price')
-
-		const { product_id, product_price, product_name } = product
+		const { product_id, product_color, product_name, product_price } = product
 
 		$productId.id = product_id
 		$productName.textContent = product_name
 		$productPrice.textContent = product_price
+		$productColor.src = `assets/img/${product_color}.png` || 'assets/img/header.png'
 
 		let $clone = $productsTemplate.cloneNode(true)
-		$listProducts.appendChild($clone)
+		$productsChild.appendChild($clone)
 	})
-	$loader.classList.add('hidden')
+	setTimeout(() => {
+		$products.appendChild($productsChild)
+		$loader.classList.add('hidden')
+	}, 1500)
 }
 
 function validateInputs(inputs) {

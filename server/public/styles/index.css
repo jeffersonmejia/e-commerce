@@ -180,7 +180,7 @@ header figure {
 	margin-top: 20px;
 }
 header img {
-	max-width: 300px;
+	max-width: 400px;
 	right: 0;
 }
 header figcaption {
@@ -190,11 +190,12 @@ header figcaption {
 	margin-bottom: 12px;
 	font-size: 0.8rem;
 }
-.list-products {
+.list-products section {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(160px, auto));
 	gap: 16px;
 	padding: 0 16px;
+	animation: appear 0.3s ease-in-out;
 }
 .product {
 	background-color: var(--box-bg);
@@ -204,7 +205,11 @@ header figcaption {
 	flex-direction: column;
 	gap: 4px;
 	border: 1px solid rgb(232, 232, 232);
-	animation: appear 0.3s ease-in-out;
+}
+
+.product img {
+	width: 100%;
+	height: 160px;
 }
 
 @keyframes appear {
@@ -220,10 +225,16 @@ header figcaption {
 .product figcaption {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
 	align-items: center;
 	text-align: center;
 }
+.product figcaption small:nth-child(1) {
+	margin-top: 12px;
+}
+.product figcaption small:nth-child(2) {
+	margin-bottom: 12px;
+}
+
 .product button {
 	width: 100%;
 	padding: 12px 0;
