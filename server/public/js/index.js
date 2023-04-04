@@ -57,11 +57,12 @@ async function getProducts() {
 		const controller = new AbortController()
 		const signal = controller.signal
 		setTimeout(() => {
-			controller.abort()
-			$loader.classList.add('hidden')
-			$abortProducts.classList.remove('hidden')
-		}, 3000)
-
+			if (!res) {
+				controller.abort()
+				$loader.classList.add('hidden')
+				$abortProducts.classList.remove('hidden')
+			}
+		}, 2000)
 		const res = await fetch(PRODUCTS_API, { signal })
 		if (!res.ok) throw { status: res.status, statusText: res.statusText }
 		const json = await res.json()

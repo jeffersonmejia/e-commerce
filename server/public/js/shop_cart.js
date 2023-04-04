@@ -8,7 +8,9 @@ const d = document,
 	$loader = d.querySelector('.loader'),
 	$paymentSubtotal = d.querySelector('.payment-subtotal'),
 	$paymentIva = d.querySelector('.payment-iva'),
-	$paymentTotal = d.querySelector('.payment-total')
+	$paymentTotal = d.querySelector('.payment-total'),
+	$payBtn = d.getElementById('pay-shop'),
+	$shopsUnavailable = d.querySelector('.shops-unavailable')
 
 const { GET_PRODUCTS_SHOPS, SHOPS_CART, USER_PAYMENT, PAY_SHOPS } = APIS
 let client_id = -1
@@ -116,6 +118,15 @@ function loadUserPayment({ payment_subtotal, payment_iva, payment_total }) {
 	$paymentSubtotal.textContent = payment_subtotal
 	$paymentIva.textContent = payment_iva
 	$paymentTotal.textContent = payment_total
+	if (payment_subtotal === '--') {
+		$payBtn.disabled = true
+		$payBtn.classList.add('btn-disabled')
+		$shopsUnavailable.classList.remove('hidden')
+	} else {
+		$payBtn.disabled = false
+		$payBtn.classList.remve('btn-disabled')
+	}
+	//btn-disabled
 }
 
 function loadCartShops() {

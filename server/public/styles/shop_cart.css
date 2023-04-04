@@ -7,6 +7,7 @@
 	--box-radius: 8px;
 	--btn-radius: 4px;
 	--btn-bg: rgba(26, 115, 232);
+	--btn-disabled: rgba(26, 115, 232, 0.5);
 }
 
 * {
@@ -279,9 +280,35 @@ article.payment-resumen {
 		transform: rotate(360deg);
 	}
 }
+.shops-unavailable {
+	height: 80vh;
+}
+.shops-unavailable figure {
+	height: 100%;
+	background-color: transparent;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	padding: 32px;
+	gap: 24px;
+}
+.shops-unavailable img {
+	width: 100%;
+	max-width: 300px;
+}
+.shops-unavailable figcaption {
+	text-align: center;
+}
+.btn-disabled {
+	background-color: var(--btn-disabled);
+	cursor: not-allowed;
+}
 .hidden {
 	display: none;
 }
+
 @media screen and (min-width: 600px) {
 	.burger-menu {
 		display: none;
