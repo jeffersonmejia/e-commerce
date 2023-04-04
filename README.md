@@ -32,6 +32,10 @@ Comming soon...
 
   `npm install`
 
+- Run
+
+  `npm run dev`
+
 ---
 
 ### 4. Author 👾
