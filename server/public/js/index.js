@@ -1,7 +1,10 @@
 import { APIS } from './modules/api.js'
 import { http } from './modules/http.js'
 
-const d = document,
+const SHOPPING_BTN_CONTENT = 'Agregar al carrito',
+	USERGHOST = -1,
+	{ PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API, SHOPS_CART } = APIS,
+	d = document,
 	$aside = d.querySelector('.aside'),
 	$shoppingNumber = d.querySelector('.shopping-cart b'),
 	$productsTemplate = d.querySelector('#product-template').content,
@@ -9,35 +12,42 @@ const d = document,
 	$productsChild = d.createElement('section'),
 	$loader = d.querySelector('.loader'),
 	$registerModal = d.querySelector('.register-modal'),
-	$abortProducts = d.querySelector('.abort-products')
+	navbarMatches = ['.burger-menu', , '.aside-back'],
+	productButtonMatches = ['.product button'],
+	signupMatches = ['.register-modal button'],
+	cancelSignupMatches = ['.register-modal small']
 
-const SHOPPING_BTN_CONTENT = 'Agregar al carrito'
-const { PRODUCTS_API, SIGNUP_API, ADD_PRODUCTS_API, SHOPS_CART } = APIS
-const DEFAULT_RESPONSE = {
-	status: -1,
-	statusText: 'Servidor no disponible',
-}
-const shoppingList = []
 let client_id = -1
+
+function hasMatches(target, matches) {
+	return matches.some((match) => target.matches(match))
+}
+
 function toggleAside({ target }) {
-	if (target.matches('.burger-menu') || target.matches('.aside-back')) {
+	if (hasMatches(target, navbarMatches)) {
 		$aside.classList.toggle('hidden')
 	}
 }
 
 function addShoppingCart({ target }) {
-	if (target.matches('.product button')) {
-		if (client_id === -1) {
-			$registerModal.classList.remove('hidden')
-		} else {
-			target.disabled = true
-			target.classList.add('btn-disabled')
-			target.textContent = '...'
-			setTimeout(() => {
-				addShop(target.id, target)
-			}, 300)
-		}
+	if (hasMatches(target, productButtonMatches)) {
+		checkUserExists(target)
 	}
+}
+
+function checkUserExists(target) {
+	if (client_id === -1) {
+		$registerModal.classList.remove('hidden')
+	} else {
+		waitForShop(target)
+		setTimeout(() => addShop(target.id, target), 300)
+	}
+}
+
+function waitForShop(target) {
+	target.disabled = true
+	target.classList.add('btn-disabled')
+	target.textContent = '...'
 }
 
 async function addShop(product_id, target) {
@@ -58,39 +68,46 @@ async function getProducts() {
 }
 
 function loadProducts(products) {
-	products.forEach((product) => {
-		const $productId = $productsTemplate.querySelector('button'),
-			$productColor = $productsTemplate.querySelector('.product-color'),
-			$productName = $productsTemplate.querySelector('.product-name'),
-			$productPrice = $productsTemplate.querySelector('.product-price')
-		const { product_id, product_color, product_name, product_price } = product
+	products.forEach((product) => setEveryProduct(product))
+	setTimeout(() => waitForProducts(), 1500)
+}
 
-		$productId.id = product_id
-		$productName.textContent = product_name
-		$productPrice.textContent = product_price
-		$productColor.src = `assets/img/${product_color}.png` || 'assets/img/header.png'
+function setEveryProduct(product) {
+	const $productId = $productsTemplate.querySelector('button'),
+		$productColor = $productsTemplate.querySelector('.product-color'),
+		$productName = $productsTemplate.querySelector('.product-name'),
+		$productPrice = $productsTemplate.querySelector('.product-price'),
+		{ product_id, product_color, product_name, product_price } = product
 
-		let $clone = $productsTemplate.cloneNode(true)
-		$productsChild.appendChild($clone)
-	})
-	setTimeout(() => {
-		$products.appendChild($productsChild)
-		$loader.classList.add('hidden')
-	}, 1500)
+	$productId.id = product_id
+	$productName.textContent = product_name
+	$productPrice.textContent = product_price
+	$productColor.src = `assets/img/${product_color}.png` || 'assets/img/header.png'
+	let $clone = $productsTemplate.cloneNode(true)
+	$productsChild.appendChild($clone)
+}
+
+function waitForProducts() {
+	$products.appendChild($productsChild)
+	$loader.classList.add('hidden')
 }
 
 function validateInputs(inputs) {
 	let isEmpty = true
-	inputs.forEach((input) => {
-		isEmpty = input.value === ''
-		if (isEmpty) {
-			input.classList.add('input-fail')
-			setTimeout(() => {
-				input.classList.remove('input-fail')
-			}, 1500)
-		}
-	})
+	inputs.forEach((input) => validateInput(input, isEmpty))
 	return isEmpty
+}
+
+function validateInput(input, isValidInput) {
+	isValidInput = input.value === ''
+	if (isValidInput) {
+		input.classList.add('input-fail')
+		setTimeout(() => shakeInput(input), 1500)
+	}
+}
+
+function shakeInput() {
+	input.classList.remove('input-fail')
 }
 
 function validateSignup() {
@@ -102,17 +119,6 @@ function getSigninData(inputs) {
 	const data = {}
 	inputs.forEach((input) => (data[input.name] = input.value))
 	return data
-}
-
-function getFetchOptions(data) {
-	const OPTIONS = {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(data),
-	}
-	return OPTIONS
 }
 
 function resetSignupInputs() {
@@ -152,28 +158,36 @@ function repeatSignup(target) {
 
 function signup(e) {
 	const { target } = e
-	if (target.matches('.register-modal button')) {
+	if (hasMatches(target, signupMatches)) {
 		e.preventDefault()
 		const { isValidate, inputs } = validateSignup()
-		if (isValidate) {
-			const data = getSigninData(inputs)
-			disableSignupInputs(true)
-			target.textContent = '...'
-			setTimeout(() => signupUser(target, data), 1500)
-		}
+		if (isValidate) waitForSignup(target, inputs)
 	}
 }
 
+function waitForSignup(target, inputs) {
+	const data = getSigninData(inputs)
+	disableSignupInputs(true)
+	target.textContent = '...'
+	setTimeout(() => signupUser(target, data), 1500)
+}
+
 function cancelSignup({ target }) {
-	if (target.matches('.register-modal small')) {
+	if (hasMatches(target, cancelSignupMatches)) {
 		$registerModal.classList.add('hidden')
 	}
 }
 
 function setClientId() {
-	if (client_id === -1 && localStorage.getItem('client_id')) {
-		client_id = localStorage.getItem('client_id')
-	}
+	if (client_id === USERGHOST && getLocalUser()) setLocalUser()
+}
+
+function getLocalUser() {
+	return localStorage.getItem('client_id')
+}
+
+function setLocalUser() {
+	client_id = localStorage.getItem('client_id')
 }
 
 function loadCartShops() {
