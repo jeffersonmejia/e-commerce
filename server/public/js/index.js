@@ -1,4 +1,5 @@
-import { APIS } from './modules/index.js'
+import { APIS } from './modules/api.js'
+import { http } from './modules/http.js'
 
 const d = document,
 	$aside = d.querySelector('.aside'),
@@ -40,41 +41,20 @@ function addShoppingCart({ target }) {
 }
 
 async function addShop(product_id, target) {
-	try {
-		const res = await fetch(ADD_PRODUCTS_API, getFetchOptions({ product_id, client_id }))
-		if (!res.ok) {
-			DEFAULT_RESPONSE.status = res.status
-			DEFAULT_RESPONSE.statusText = res.statusText
-			throw DEFAULT_RESPONSE
-		}
-		let shops = parseInt($shoppingNumber.textContent)
-		$shoppingNumber.textContent = shops + 1
-		target.classList.remove('btn-disabled')
-		target.disabled = false
-		target.textContent = SHOPPING_BTN_CONTENT
-	} catch (error) {
-		console.log(error)
-	}
+	const myHttp = http()
+	let shops = parseInt($shoppingNumber.textContent)
+
+	myHttp.post(ADD_PRODUCTS_API, { product_id, client_id })
+	$shoppingNumber.textContent = shops + 1
+	target.classList.remove('btn-disabled')
+	target.disabled = false
+	target.textContent = SHOPPING_BTN_CONTENT
 }
 
 async function getProducts() {
-	try {
-		const controller = new AbortController()
-		const signal = controller.signal
-		setTimeout(() => {
-			if (!res) {
-				controller.abort()
-				$loader.classList.add('hidden')
-				$abortProducts.classList.remove('hidden')
-			}
-		}, 2000)
-		const res = await fetch(PRODUCTS_API, { signal })
-		if (!res.ok) throw { status: res.status, statusText: res.statusText }
-		const json = await res.json()
-		loadProducts(json)
-	} catch (error) {
-		console.log(error)
-	}
+	const myHttp = http()
+	const res = await myHttp.get(PRODUCTS_API)
+	loadProducts(res)
 }
 
 function loadProducts(products) {
@@ -146,32 +126,28 @@ function disableSignupInputs(flag) {
 }
 
 async function signupUser(target, data) {
-	try {
-		const res = await fetch(SIGNUP_API, getFetchOptions(data))
-		const json = await res.json()
-		if (!res.ok) {
-			DEFAULT_RESPONSE.status = res.status
-			DEFAULT_RESPONSE.statusText = res.statusText
-			throw DEFAULT_RESPONSE
-		} else if (json.code !== 200) {
-			DEFAULT_RESPONSE.status = json.code
-			DEFAULT_RESPONSE.statusText = json.message
-			throw DEFAULT_RESPONSE
-		}
-		target.textContent = json.message
-		setTimeout(() => {
-			$registerModal.classList.add('hidden')
-			client_id = json.id
-			localStorage.setItem('client_id', client_id)
-		}, 300)
-	} catch (error) {
-		target.textContent = error.statusText
-		setTimeout(() => {
-			resetSignupInputs()
-			target.textContent = 'Registrarme'
-			disableSignupInputs(false)
-		}, 3000)
-	}
+	const myHttp = http()
+	const res = await myHttp.post(SIGNUP_API, data)
+	target.textContent = res.message
+	saveUserLocal(res.id)
+	if (res.status > 400) repeatSignup(target)
+}
+
+function saveUserLocal(id) {
+	setTimeout(() => {
+		$registerModal.classList.add('hidden')
+		client_id = id
+		localStorage.setItem('client_id', client_id)
+	}, 300)
+}
+
+function repeatSignup(target) {
+	target.textContent = res.statusText
+	setTimeout(() => {
+		resetSignupInputs()
+		target.textContent = 'Registrarme'
+		disableSignupInputs(false)
+	}, 3000)
 }
 
 function signup(e) {
@@ -206,14 +182,14 @@ function loadCartShops() {
 }
 
 async function loadClientCart() {
-	try {
-		$shoppingNumber.textContent = '...'
-		const res = await fetch(SHOPS_CART, getFetchOptions({ client_id }))
-		const json = await res.json()
-		const { response } = json
+	$shoppingNumber.textContent = '...'
+	const myHttp = http()
+	const res = await myHttp.post(`${SHOPS_CART}`, { client_id })
+	const { response } = res
+	if (response !== undefined) {
 		$shoppingNumber.textContent = response.client_shops || 0
-	} catch (error) {
-		console.log(error)
+	} else if (res.status > 400) {
+		$shoppingNumber.textContent = 0
 	}
 }
 

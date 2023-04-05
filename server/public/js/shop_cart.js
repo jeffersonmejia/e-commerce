@@ -1,4 +1,4 @@
-import { APIS } from './modules/index.js'
+import { APIS } from './modules/api.js'
 
 const d = document,
 	$aside = d.querySelector('.aside'),
